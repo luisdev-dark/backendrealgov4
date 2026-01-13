@@ -1,7 +1,6 @@
 package trips
 
 import (
-	"context"
 	"encoding/json"
 	"net/http"
 
@@ -49,7 +48,7 @@ func CreateTrip(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	ctx := context.Background()
+	ctx := r.Context()
 	pool, err := db.GetPool(ctx)
 	if err != nil {
 		httpx.Error(w, http.StatusInternalServerError, "Database connection failed")
@@ -127,7 +126,7 @@ func GetTripByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ctx := context.Background()
+	ctx := r.Context()
 	pool, err := db.GetPool(ctx)
 	if err != nil {
 		httpx.Error(w, http.StatusInternalServerError, "Database connection failed")

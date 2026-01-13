@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"context"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -13,7 +12,7 @@ import (
 // GetRoutes handles GET /api/routes
 // Returns a list of all active routes
 func GetRoutes(w http.ResponseWriter, r *http.Request) {
-	ctx := context.Background()
+	ctx := r.Context()
 	pool, err := db.GetPool(ctx)
 	if err != nil {
 		httpx.Error(w, http.StatusInternalServerError, "Database connection failed")
@@ -74,7 +73,7 @@ func GetRouteByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ctx := context.Background()
+	ctx := r.Context()
 	pool, err := db.GetPool(ctx)
 	if err != nil {
 		httpx.Error(w, http.StatusInternalServerError, "Database connection failed")
