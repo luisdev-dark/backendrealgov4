@@ -1,81 +1,54 @@
 # RealGo MVP - Backend
 
-Backend ligero escrito en Go para el MVP de transporte con rutas fijas. Proporciona endpoints para listar rutas, consultar detalles y crear viajes siguiendo un flujo básico de reserva.
+Esta carpeta contiene el servicio Go que alimenta la API del MVP RealGo. Sirve rutas fijas, expone necesidades de viaje básicas y mantiene la lógica interna separada en dominios claros.
 
 ## Stack tecnológico
 
-- **Go 1.21+**
-- **Chi Router** – enrutamiento HTTP minimalista
-- **pgxpool** – pool de conexiones PostgreSQL
-- **PostgreSQL (compatible con Neon, Supabase u otro proveedor)**
-- **Vercel** – despliegues serverless escritos para Go
+- **Go 1.21+** – lenguaje principal del servicio
+- **Chi Router** – manejo ligero de rutas HTTP
+- **pgxpool** – pool seguro de conexiones con PostgreSQL
+- **PostgreSQL compatible** – base de datos relacional para rutas, paradas y viajes
+- **Vercel** – despliegues serverless con integración directa desde GitHub
 
-## Estructura principal
+## Organización del código
 
 ```
 backend/
-├── api/                # Handlers HTTP expuestos a través de Vercel
-├── internal/           # Lógica interna por dominio (db, http helpers, models, rutas, viajes)
-├── sql/                # Scripts de esquema y seed para poblar la base
-├── go.mod
-go.sum
-├── vercel.json         # Configuración de despliegue
-└── README.md           # Este archivo
+├── api/                # Entry point HTTP para Vercel
+├── internal/           # Dominios: db, http helpers, models, routes, trips
+├── sql/                # Esquema y datos semilla reutilizables
+├── go.mod              # Dependencias Go
+├── go.sum              # Sumas de dependencias
+└── vercel.json         # Configuración de despliegue para Vercel
 ```
 
-## Configuración local
+## Desarrollo local (alto nivel)
 
-1. Instala dependencias:
+- Instala Go 1.21+ y asegúrate de que `go` esté disponible en tu PATH.
+- Define la variable de entorno `DATABASE_URL` con la conexión hacia tu PostgreSQL (la forma exacta depende del proveedor que uses).
+- Usa los scripts dentro de `sql/` para recrear el esquema y poblar datos de referencia en la base (psql o tu herramienta preferida).
+- Ejecuta `go run ./api` o usa un comando equivalente en tu editor para levantar el servidor en modo local.
 
-```bash
-cd backend
-go mod download
-```
+## Principales responsabilidades del backend
 
-2. Crea un archivo `.env` con la siguiente variable:
+- Validar y responder `GET /api/health` para que el despliegue pueda comprobar el estado del servicio.
+- Listar rutas activas y los detalles completos de cada ruta con sus paradas.
+- Manejar la creación de viajes en estado `requested`, incluyendo validaciones básicas de pagos y paradas de subida/bajada.
+- Permitir la consulta de viajes por identificador, devolviendo objetos JSON consistentes junto con errores estructurados.
 
-```env
-DATABASE_URL=postgresql://<usuario>:<contraseña>@<host>:<puerto>/<base_de_datos>?sslmode=require
-```
+## Pruebas y calidad
 
-3. Aplica el esquema y los datos de prueba desde la terminal o el panel de la base:
+- El código usa paquetes internos para mantener separación de responsabilidades; puedes agregar tests en carpetas como `internal/routes` o `internal/trips` según lo necesites.
+- Sigue añadiendo tests unitarios y de integración conforme se agreguen nuevos flows como autenticación o matching con drivers.
 
-```bash
-psql "$DATABASE_URL" -f sql/schema.sql
-psql "$DATABASE_URL" -f sql/seed.sql
-```
+## Notas rápidas
 
-## Endpoints disponibles
+- `DATABASE_URL` debe ofrecer SSL si tu proveedor lo requiere.
+- Por ahora el `user_id` dentro de los seeds está estático; cualquier sistema de autenticación debe reemplazar este valor.
+- Los métodos de pago permitidos y las tarifas se definen en los modelos, no en configuraciones externas.
 
-- `GET /api/health` – confirma que el servicio responde
-- `GET /api/routes` – lista rutas activas
-- `GET /api/routes/{route_id}` – detalla una ruta con paradas
-- `POST /api/trips` – crea un viaje en estado `requested`
-- `GET /api/trips/{trip_id}` – obtiene el viaje por su identificador
+## Futuro cercano
 
-Todos los endpoints devuelven JSON estándar y tratan errores usando `{ "error": "mensaje" }`.
-
-## Despliegue en Vercel
-
-1. Sube el repositorio a GitHub y conéctalo a Vercel.
-2. Vercel detectará el entorno Go.
-3. Configura variables de entorno desde el dashboard:
-
-```env
-DATABASE_URL=postgresql://<usuario>:<contraseña>@<host>:<puerto>/<base_de_datos>?sslmode=require
-```
-
-4. Cada push a la rama principal gatilla un nuevo deploy serverless.
-
-## Notas adicionales
-
-- El `user_id` usado en las pruebas está hardcodeado mientras no exista autenticación.
-- `pickup_stop_id` y `dropoff_stop_id` son opcionales, pero si se envían deben ser distintos.
-- Los métodos de pago admitidos son `cash`, `yape` y `plin`.
-
-## Próximos pasos
-
-- Implementar autenticación y autorización reales
-- Añadir endpoints para drivers y matching
-- Registrar historial de viajes y pagos
-- Agregar notificaciones y tracking en tiempo real
+- Añadir autenticación real y permisos por rol.
+- Exponer endpoints y lógica para drivers, matching y tracking.
+- Mejorar el monitoreo de viajes y los registros de pagos para auditoría.
