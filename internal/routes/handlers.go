@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/luis/ride-mvp/internal/db"
-	"github.com/luis/ride-mvp/internal/httpx"
-	"github.com/luis/ride-mvp/internal/models"
+	"github.com/luisdev-dark/backendrealgov4/internal/db"
+	"github.com/luisdev-dark/backendrealgov4/internal/httpx"
+	"github.com/luisdev-dark/backendrealgov4/internal/models"
 )
 
 // GetRoutes handles GET /api/routes

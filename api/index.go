@@ -5,9 +5,9 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/luis/ride-mvp/internal/httpx"
-	"github.com/luis/ride-mvp/internal/routes"
-	"github.com/luis/ride-mvp/internal/trips"
+	"github.com/luisdev-dark/backendrealgov4/internal/httpx"
+	"github.com/luisdev-dark/backendrealgov4/internal/routes"
+	"github.com/luisdev-dark/backendrealgov4/internal/trips"
 )
 
 // Handler is the main entry point for Vercel serverless function
