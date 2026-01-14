@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"api/internal/db"
+	"api/internal/httpx"
+	"api/internal/models"
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
-	"github.com/luisdev-dark/backendrealgov4/internal/db"
-	"github.com/luisdev-dark/backendrealgov4/internal/httpx"
-	"github.com/luisdev-dark/backendrealgov4/internal/models"
 )
 
 // HardcodedPassengerID is the fixed user ID for MVP testing

@@ -1,4 +1,4 @@
-module github.com/luisdev-dark/backendrealgov4
+module api
 
 go 1.21
 

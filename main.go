@@ -1,13 +1,13 @@
-package api
+package main
 
 import (
 	"net/http"
 
+	"api/internal/httpx"
+	"api/internal/routes"
+	"api/internal/trips"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/luisdev-dark/backendrealgov4/internal/httpx"
-	"github.com/luisdev-dark/backendrealgov4/internal/routes"
-	"github.com/luisdev-dark/backendrealgov4/internal/trips"
 )
 
 // Handler is the main entry point for Vercel serverless function
